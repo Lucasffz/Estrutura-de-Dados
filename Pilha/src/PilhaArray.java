@@ -5,7 +5,8 @@ public class PilhaArray implements Pilha {
 	private int tc; //taxa de crescimento, dependendo do resultado indica se o crescimento é incremental ou de duplicação.
 	 
 	
-	PilhaArray(int tam){
+	public PilhaArray(int tam,int tc){
+		this.tc = tc;
 		S = new Object[tam];	
 	}
 	
