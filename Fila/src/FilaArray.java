@@ -1,13 +1,16 @@
 public class FilaArray implements Fila {
 	private Object aFila[]; // Array de conteúdo da fila
-	private int i = 0 ;// índice referente ao primeiro elemento
-	private int f = i ; // índice apos o ultimo elemento 
+	private int i;// índice referente ao primeiro elemento
+	private int f; // índice apos o ultimo elemento 
 	private int n; // tamanho da fila.
 	private int fc;// fator de crescimento 
 	
 	public FilaArray(int n, int fc) {
+		i = 0;
+		f = i;
 		this.n = n;
 		this.fc = fc;
+		aFila = new Object[n];
 	}
 
 	@Override
@@ -16,7 +19,7 @@ public class FilaArray implements Fila {
 	}
 	
 	private boolean cheio() {
-		return tamanho() == n;
+		return tamanho() == n - 1;
 	}
 
 	@Override
@@ -36,8 +39,12 @@ public class FilaArray implements Fila {
 	public Object desenfileirar() throws EFilaVazia {
 		if(estaVazia()) 
 			throw new EFilaVazia("Fila vazia.");
-		else
-			return aFila[--f];
+		else {
+			Object aux = new Object();
+			aux = aFila[i];
+			i = (i+1) % n;
+			return aux;
+		}
 	}
 
 	@Override
@@ -51,7 +58,7 @@ public class FilaArray implements Fila {
 			for (int i = 0; i <n; i++) 	aux[i] = aFila[i];
 			aFila = aux;
 		}
-		aFila[f++] = o;
+		aFila[f] = o;
+		f = (f-1) % n;
 	}
-
 }
