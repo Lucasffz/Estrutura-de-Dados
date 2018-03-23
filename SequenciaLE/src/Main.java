@@ -11,6 +11,7 @@ public class Main {
 		No no;
 		Object objeto;
 		while(op!=0) {
+		System.out.println("--------------------------------------------------------");	
 		System.out.println("1- size; \n2- isEmpty; \n3- elmentAtRank; \n4- replaceAtRank; \n5- removeAtrank; \n6- fist; \n7- last;"
 					+ "\n8-before;\n9-after;\n10-replaceElement;\n11-swapElements;\n12-insertBefore\n13-insertAfter;\n14-insertFist;\n15insertLast;\n16-remove.");
 			
@@ -41,7 +42,8 @@ public class Main {
 				System.out.println("removido.");
 				break;
 		case 6:
-				System.out.println(sequencia.fist());
+				Object n = sequencia.fist();
+				System.out.println(n);
 				break;
 		case 7:
 				System.out.println(sequencia.last());

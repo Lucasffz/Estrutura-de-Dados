@@ -119,6 +119,7 @@ public class SequenciaLE implements Sequencia {
 		No no = new No();
 		no.setAnterior(inicio);
 		no.setProximo(proximo1);
+		no.setElemento(o);
 		proximo1.setAnterior(no);
 		inicio.setProximo(no);
 		tamanho++;
@@ -132,6 +133,7 @@ public class SequenciaLE implements Sequencia {
 		No no = new No();
 		no.setAnterior(anterior1);
 		no.setProximo(fim);
+		no.setElemento(o);
 		anterior1.setProximo(no);
 		fim.setAnterior(no);
 		tamanho++;
