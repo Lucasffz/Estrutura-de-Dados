@@ -127,7 +127,7 @@ public class SequenciaLE implements Sequencia {
 	}
 
 	
-	public void intertLast(Object o) {
+	public void insertLast(Object o) {
 		No anterior1 = fim.getAnterior();
 		No no = new No();
 		no.setAnterior(anterior1);

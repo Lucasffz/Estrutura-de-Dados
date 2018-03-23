@@ -39,7 +39,7 @@ public interface Sequencia {
 	public void insertFist(Object o);
 	
 	//insere o elemento no ultimo
-	void intertLast(Object o);
+	void insertLast(Object o);
 	
 	//remove o nó
 	public void remove(No n);
