@@ -5,11 +5,11 @@ public interface Sequencia {
 	//Sequencia está vazia
 	public boolean isEmpty();
 	//Retorna o elemento do índice setado
-	public Object elemAtRank(int r);
+	public Object elemAtRank(int r) throws ExceptionRank;
 	
-	public Object replaceAtRank(Object o,int r);
+	public Object replaceAtRank(Object o,int r) throws ExceptionRank;
 	//remove o elemento com este índice
-	public void removeAtRank(int r);
+	public void removeAtRank(int r) throws ExceptionRank;
 	
 	//retorna o primeiro elemento
 	public Object fist();
@@ -44,8 +44,8 @@ public interface Sequencia {
 	//remove o nó
 	public void remove(No n);
 	//
-	public No atRank(int r);
+	public No atRank(int r) throws ExceptionRank;
 	
-	public int rankOf(No n);
+	public int rankOf(No n); 
 	
 }

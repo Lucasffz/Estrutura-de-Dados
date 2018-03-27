@@ -24,13 +24,13 @@ public class SequenciaLE implements Sequencia {
 	}
 
 	@Override
-	public Object elemAtRank(int r) {
+	public Object elemAtRank(int r) throws ExceptionRank {
 		No no = atRank(r);
 		return no.getElemento();
 	}
 
 	@Override
-	public Object replaceAtRank(Object o, int r) {
+	public Object replaceAtRank(Object o, int r) throws ExceptionRank {
 		No no = atRank(r);
 		Object aux = no.getElemento();
 		no.setElemento(o);
@@ -40,7 +40,7 @@ public class SequenciaLE implements Sequencia {
 	
 
 	@Override
-	public void removeAtRank(int r) {
+	public void removeAtRank(int r) throws ExceptionRank {
 		No no = atRank(r);
 		no.getAnterior().setProximo(no.getProximo());
 		no.getProximo().setAnterior(no.getAnterior());
@@ -149,7 +149,10 @@ public class SequenciaLE implements Sequencia {
 	}
 
 	@Override
-	public No atRank(int r) {
+	public No atRank(int r) throws ExceptionRank{
+		if(r<0 || r>size()) {
+			throw new ExceptionRank("Indíce inválido.");
+		}
 		No no = new No();
 		if(r <=size()/2) {
 			no = inicio;
