@@ -155,13 +155,13 @@ public class SequenciaLE implements Sequencia {
 		}
 		No no = new No();
 		if(r <=size()/2) {
-			no = inicio;
+			no = inicio.getProximo();
 			for (int i = 0; i < r; i++) {
 				no = no.getProximo();
 			}
 		}
 		else {
-			no = fim;
+			no = fim.getAnterior();
 			for (int i = 0; i < size()-r-1; i++) {
 				no = no.getAnterior();
 			}
