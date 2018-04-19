@@ -28,6 +28,7 @@ public class ClassBT implements BinaryTree{
           }
           NodeBT n = new NodeBT(o,no);
           no.setLeft(n);
+          size++;
           return n;
       }
       @Override
@@ -37,6 +38,7 @@ public class ClassBT implements BinaryTree{
           }
           NodeBT n = new NodeBT(o,no);
           no.setRight(n);
+          size++;
           return n;
       }
      
@@ -52,12 +54,12 @@ public class ClassBT implements BinaryTree{
 
     @Override
     public boolean hasLeft(NodeBT no) throws InvalidPositionException {
-        return no.getLeft() == null;
+        return no.getLeft() != null;
     }
 
     @Override
     public boolean hasRight(NodeBT no) throws InvalidPositionException {
-        return no.getRight() == null;
+        return  no.getRight() != null;
     }
 
     @Override
