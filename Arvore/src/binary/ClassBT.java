@@ -217,14 +217,21 @@ public class ClassBT implements BinaryTree{
         if(isRoot(node)){
             throw new InvalidPositionException("Não é possível remover a raiz");
          }
+        //Sendo nó externo
         if(isExternal(node)){
+            //se a chave do nó a ser removido for menor que a chave do pai, siginifica que ele esta
+            //a esquerda do pai
             if(node.getKey()<= node.getParent().getKey())
-                node.getParent().setLeft(null);
+                node.getParent().setLeft(null);         
             else
                 node.getParent().setRight(null);
-            
+            node.setParent(null);
+            size--;
+            return node.getKey();
         }
+        //caso tenha um filho esquerdo
         if(hasLeft(node) && !hasRight(node)){
+            //caso o nó a ser removido esteja do lado esquerdo
             if(node.getKey()<= node.getParent().getKey()){
                 node.getParent().setLeft(node.getLeft());
                 node.getLeft().setParent(node.getParent());
@@ -233,9 +240,11 @@ public class ClassBT implements BinaryTree{
                 node.getParent().setRight(node.getRight());
                 node.getRight().setParent(node.getRight());
             }
+            node.setParent(null);
             size--;
-            return node;
+            return node.getKey();
         }
+        //caso tenha um filho direito
         if(!hasLeft(node) && hasRight(node)){
             if(node.getKey()<= node.getParent().getKey()){
                 node.getParent().setLeft(node.getRight());
@@ -246,19 +255,25 @@ public class ClassBT implements BinaryTree{
                 node.getParent().setRight(node.getRight());
                 node.getRight().setParent(node.getParent());
             }
+            node.setParent(null);
             size--;
-            return node;
+            return node.getKey();
         }
-       NodeBT passer = node.getRight();
-        while (passer.getLeft() != null) 
+        //No caso do nó ter dois filhos, precisamos descobrir o substituto
+        if(hasLeft(node) && hasRight(node)){ 
+            NodeBT passer = node.getRight();
+            while (passer.getLeft() != null) 
                 passer = passer.getLeft();
-        
-        int auxKey = passer.getKey();
-        remover(auxKey);
-        node.setKey(auxKey);
-        size--;
-        return node;
-    
+            int auxKey = passer.getKey();
+            int antkey = node.getKey();
+            Object element = passer.getElement();
+            remover(auxKey);
+            node.setKey(auxKey);
+            node.setElement(element);
+            size--;
+            return antkey;
+         }
+        return null;
     }
     
     private NodeBT removeLower(NodeBT node) throws InvalidPositionException{

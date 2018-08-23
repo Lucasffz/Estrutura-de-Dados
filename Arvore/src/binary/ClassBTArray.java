@@ -187,7 +187,7 @@ public class ClassBTArray{
     }
 
   
-    public Object remove(NodeBT no, int key) throws InvalidPositionException {
+   /* public Object remove(NodeBT no, int key) throws InvalidPositionException {
                
         Object aux = new Object();     
         //caso seja o nó folha
@@ -270,8 +270,8 @@ public class ClassBTArray{
             }
             else if (array[i].getKey() > key)
                 i = (2 * i);           
-        }
-*/
+        }*/
+
     }
 
     public NodeBT search(int key){        
