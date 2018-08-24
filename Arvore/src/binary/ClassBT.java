@@ -337,7 +337,7 @@ public class ClassBT implements BinaryTree{
       
     }
     
-    private void insertAtExternal(NodeBT node,Object o){
+    public void insertAtExternal(NodeBT node,Object o){
         node.setLeft(null);
         node.setRight(null);
         node.setElement(o);
