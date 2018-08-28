@@ -28,23 +28,31 @@ public class AVLTree extends ClassBT {
         }
     
         
-        
-      public NodeBT insert(Object o, int key,Position p) throws InvalidPositionException{
-        NodeBT node;  
-        if(isEmpty()){
-              node = new NodeBT(key,o,null);
+      public void insert(Object o, int key) throws InvalidPositionException{
+          NodeAVL node = new NodeAVL (key,o,null);
+          if(isEmpty()){
               setRoot(node);
+              size = 1;       
+          } 
+          else
+              insert(node, root);
+      }
+           
+      public void insert(NodeAVL node,NodeAVL subTree) throws InvalidPositionException{
+          NodeAVL auxnode = (NodeAVL) search(node.getKey(),subTree);
+          node.setParent(auxnode);
+          //Se a chave do nó a ser inserido for menor ou igual a do nó retornado na busca, inserimos o nó o lado esquerdo
+          if( node.getKey() <= auxnode.getKey() ){
+                auxnode.setLeft(node);
+                size++;
+            }
+          else{
+              auxnode.setRight(node);
               size++;
           }
-          else{
-          node = (NodeBT) search(key,(NodeBT) p);
-          if(key == node.getKey())//significa que o nodo é interno nesse caso faz uma chamada recursiva para o filho e insere
-              return insert(o,key,node.getLeft());
-          insertAtExternal(node,o);
-          size++;
-          }
-          return node;
-        }  
+    }
+         
+        
         
         
      public Object remover(int key) throws InvalidPositionException {
@@ -113,6 +121,85 @@ public class AVLTree extends ClassBT {
          }
         return null;
     }
+     
+     public Position search(int key,Position p){
+        NodeAVL node = (NodeAVL) p;
+        if(isExternal(node)) // Nesse caso o nó inserido não tem filhos
+            return node;
+        if(key < node.getKey()){//Procura o nodo na subarvore esquerda
+            if(node.getLeft() == null)
+                return node;
+            return search(key,node.getLeft());
+        }
+        else if(key == node.getKey()) 
+            return node;
+        else{ //procura o nó na subarvore direita
+            if(node.getRight() == null)
+                return node;
+            return search(key,node.getRight());
+        }
+    }
+    //método pra pegar o fator de balanceamento, verificando a altura dos filhos
+    public int checkFB(NodeAVL node){
+        return height(node.getLeft()) - height(node.getRight());
+    }
+    
+    //Caso o fato de balanceamento esteja maior que 1 ou menor que -1
+    public boolean isUnbalanced(NodeAVL node) throws InvalidPositionException {
+        if (node.getFb()> 1 || node.getFb() < -1) 
+            return true;       
+        return false;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    //Métodos da árvore binária sobreescritos
+    
+    
+    public int height(Position p) {
+        if(root == null)
+            return 0;
+        NodeAVL node = (NodeAVL) p;
+        int heightLeft;  
+        int heightRight; 
+        
+        if(node!=null)  {  
+            heightLeft = height(node.getLeft());  
+            heightRight = height(node.getRight());   
+            
+            if(heightLeft > heightRight)   
+                return (heightLeft+1);  
+            else  
+                return (heightRight+1);  
+        }  
+        else  
+            return 0;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
