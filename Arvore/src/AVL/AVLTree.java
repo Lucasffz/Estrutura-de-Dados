@@ -20,8 +20,6 @@ public class AVLTree extends ClassBT {
         NodeAVL root;
         int size;
         
-        
-        
         public AVLTree(){
             root = null;
             size = 0;
@@ -50,10 +48,8 @@ public class AVLTree extends ClassBT {
               auxnode.setRight(node);
               size++;
           }
-    }
+      }
          
-        
-        
         
      public Object remover(int key) throws InvalidPositionException {
         if( isEmpty()){
@@ -144,11 +140,80 @@ public class AVLTree extends ClassBT {
         return height(node.getLeft()) - height(node.getRight());
     }
     
-    //Caso o fato de balanceamento esteja maior que 1 ou menor que -1
+    //Caso o fator de balanceamento esteja maior que 1 ou menor que -1
     public boolean isUnbalanced(NodeAVL node) throws InvalidPositionException {
         if (node.getFb()> 1 || node.getFb() < -1) 
             return true;       
         return false;
+    }
+    
+    public void simpleRotationLeft (NodeAVL node){
+      //O nó que está a direita do desbalanceado irá rotacionar e se tonará o novo pai deste nó  
+      NodeAVL newParent = node.getRight();
+      // Se o novo pai tiver uma subarvore a sua esquerda, essa subárvore passará a ser o filho direito do nó rotacionado; 
+      if(newParent.getLeft() != null)
+          node.setRight(newParent.getLeft());
+      else
+          node.setRight(null);
+      // Node passa a ser o pai da antiga subarvore direita
+      node.getLeft().setParent(node);
+      //verifica se o node possui um pai se sim o node newParent irá receber
+      if(node.getParent() != null)
+          newParent.setParent(node.getParent());
+      else
+          newParent.setParent(null);
+      //seta o new parent como pai do nodo
+      node.setParent(newParent);
+      
+      // aqui no fim atualiza o fato de balanceamento
+        
+    }
+    
+    public void simpleRotationRight (NodeAVL node){
+      NodeAVL newParent = node.getLeft();
+        
+      if(newParent.getRight() != null)
+          node.setLeft(newParent.getRight());
+      else
+          node.setLeft(null);
+      // Node passa a ser o pai da antiga subarvore direita
+      node.getRight().setParent(node);
+      //verifica se o node possui um pai se sim o node newParent irá receber
+      if(node.getParent() != null)
+          newParent.setParent(node.getParent());
+      else
+          newParent.setParent(null);
+      //seta o new parent como pai do nodo
+      node.setParent(newParent);
+      
+      //Atualiza o fator de balanceamento dos 2 nodos alterados
+        
+    }
+    
+    public void doubleRotationLeft (NodeAVL node){
+        simpleRotationRight(node);
+        simpleRotationLeft(node);
+    }
+    
+    public void DoubleRotationRight (NodeAVL node){
+        simpleRotationRight(node);
+        simpleRotationLeft(node);
+    }
+    
+    
+    public void balance(NodeAVL node){
+        if(node.getFb() >= 2){
+            if(node.getLeft().getFb() >=0)
+                simpleRotationRight(node);
+            else
+                DoubleRotationRight(node);
+        }
+        else{
+            if(node.getRight().getFb() <0)
+                   simpleRotationLeft(node);
+            else
+                doubleRotationLeft(node);
+        } 
     }
     
     

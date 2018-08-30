@@ -3,11 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/lucas/Desktop/Projetos/Estrutura-de-Dados/Arvore/src/generic/NodeGT.java</file>
-            <file>file:/C:/Users/lucas/Desktop/Projetos/Estrutura-de-Dados/Arvore/src/binary/ClassBTArray.java</file>
-            <file>file:/C:/Users/lucas/Desktop/Projetos/Estrutura-de-Dados/Arvore/src/binary/NodeBT.java</file>
+            <file>file:/C:/Users/lucas/Desktop/Projetos/Estrutura-de-Dados/Arvore/src/AVL/NodeAVL.java</file>
+            <file>file:/C:/Users/lucas/Desktop/Projetos/Estrutura-de-Dados/Arvore/src/AVL/AVLTree.java</file>
             <file>file:/C:/Users/lucas/Desktop/Projetos/Estrutura-de-Dados/Arvore/src/binary/ClassBT.java</file>
-            <file>file:/C:/Users/lucas/Desktop/Projetos/Estrutura-de-Dados/Arvore/src/generic/ClassGT.java</file>
         </group>
     </open-files>
 </project-private>
