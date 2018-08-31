@@ -1,9 +1,10 @@
 package AVL;
 
 import binary.ClassBT;
-import binary.NodeBT;
+import binary.NodeAVL;
 import interfaces.InvalidPositionException;
 import interfaces.Position;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /*
@@ -16,9 +17,12 @@ import java.util.Iterator;
  *
  * @author 20171014040029
  */
-public class AVLTree extends ClassBT {
+public class AVLTree  {
         NodeAVL root;
         int size;
+        ArrayList<NodeAVL> nodesPost = new ArrayList<NodeAVL>();
+        ArrayList<NodeAVL> nodesPre = new ArrayList<NodeAVL>();
+        ArrayList<NodeAVL> nodesIn = new ArrayList<NodeAVL>();
         
         public AVLTree(){
             root = null;
@@ -55,7 +59,7 @@ public class AVLTree extends ClassBT {
         if( isEmpty()){
             throw new InvalidPositionException("Ávore vazia");
         }
-        NodeBT node = (NodeBT) search(key, root);
+        NodeAVL node = (NodeAVL) search(key, root);
         if(isRoot(node)){
             throw new InvalidPositionException("Não é possível remover a raiz");
          }
@@ -103,7 +107,7 @@ public class AVLTree extends ClassBT {
         }
         //No caso do nó ter dois filhos, precisamos descobrir o substituto
         if(hasLeft(node) && hasRight(node)){ 
-            NodeBT passer = node.getRight();
+            NodeAVL passer = node.getRight();
             while (passer.getLeft() != null) 
                 passer = passer.getLeft();
             int auxKey = passer.getKey();
@@ -147,11 +151,11 @@ public class AVLTree extends ClassBT {
         return false;
     }
     
-    public void simpleRotationLeft (NodeAVL node){
+    public void simpleRotationLeft (NodeAVL node) throws InvalidPositionException{
       //O nó que está a direita do desbalanceado irá rotacionar e se tonará o novo pai deste nó  
       NodeAVL newParent = node.getRight();
       // Se o novo pai tiver uma subarvore a sua esquerda, essa subárvore passará a ser o filho direito do nó rotacionado; 
-      if(newParent.getLeft() != null)
+      if(hasLeft(newParent))
           node.setRight(newParent.getLeft());
       else
           node.setRight(null);
@@ -169,10 +173,10 @@ public class AVLTree extends ClassBT {
         
     }
     
-    public void simpleRotationRight (NodeAVL node){
+    public void simpleRotationRight (NodeAVL node) throws InvalidPositionException{
       NodeAVL newParent = node.getLeft();
         
-      if(newParent.getRight() != null)
+      if(hasRight(newParent))
           node.setLeft(newParent.getRight());
       else
           node.setLeft(null);
@@ -219,13 +223,13 @@ public class AVLTree extends ClassBT {
     //passear ávore e alterar os fatores de balanceamento
     public void passerChangeFB(NodeAVL node, int method) throws InvalidPositionException{
         
-        //se o method é igual a 1, significa que se trata do método de inserção
+       
         NodeAVL passer;
         if(isRoot(node))
             return;
         else
             passer = node.getParent();
-        
+         //se o method é igual a 1, significa que se trata do método de inserção
         if (method == 1){
             //Se o nodo for esquerdo significa que o pai irá receber +1 no fator de balanceamento ou -1 caso direito
             if(passer.getLeft() == node)
@@ -266,7 +270,61 @@ public class AVLTree extends ClassBT {
     
     //Métodos da árvore binária sobreescritos
     
+     public NodeAVL getLeft(NodeAVL no) throws InvalidPositionException {
+        if(hasLeft(no))
+            return no.getLeft();      
+        else
+            return null;
+    }
+
     
+     public NodeAVL insertLeft(NodeAVL no,Object o,int key) throws InvalidPositionException{
+         if(hasLeft(no))
+             throw new InvalidPositionException("Já tem nó esquerdo!");
+         
+         NodeAVL n = new NodeAVL(key,o,no);
+         no.setLeft(n);
+         n.setParent(no);
+         size++;
+         return n;
+     }
+     
+   
+    public NodeAVL insertRight(NodeAVL no,Object o, int key) throws InvalidPositionException{
+        if(hasRight(no))
+            throw new InvalidPositionException("Já tem nó direito!");
+        
+        NodeAVL n = new NodeAVL(key,o,no);
+        no.setRight(n);
+        size++;
+        return n;
+    }
+     
+     
+    
+    public NodeAVL getRight(NodeAVL no) throws InvalidPositionException {
+         if(hasRight(no))
+            return no.getRight();       
+        else
+            return null;
+    }
+
+    
+    public boolean hasLeft(NodeAVL no) throws InvalidPositionException {
+        return no.getLeft() != null;
+    }
+
+    
+    public boolean hasRight(NodeAVL no) throws InvalidPositionException {
+        return  no.getRight() != null;
+    }
+
+    
+    public int size() {
+       return size;
+    }
+
+   
     public int height(Position p) {
         if(root == null)
             return 0;
@@ -286,28 +344,246 @@ public class AVLTree extends ClassBT {
         else  
             return 0;
     }
+
+    
+    public int depth(Position p) {
+        NodeAVL node = (NodeAVL) p;
+        
+        if(isRoot(node))
+            return 0;
+        else
+            return 1 + depth(node.getParent());
+    }
+
+  
+   
+    public boolean isEmpty() {       
+       return root == null;
+    }
+
+    
+    public Iterator elements() {
+        if(isEmpty())
+            return null;
+        ArrayList<Object> elements = new ArrayList<Object>();
+        Iterator nodes = inOrder(root);
+        while(nodes.hasNext()){
+            NodeAVL node = (NodeAVL) nodes.next();
+            elements.add(node.getElement());
+        }
+        return elements.iterator();
+    }
     
     
+    public Iterator nos() {   
+        if(root == null)
+            return null;
+        else
+            return inOrder(root);
+    }
+
+   
+    public NodeAVL root() {
+       return root;
+    }
+    
+    public void setRoot(NodeAVL root){
+        this.root = root;
+    }
+
+    
+    public Position parent(Position p) {
+         NodeAVL node = (NodeAVL) p;
+         return node.getParent();
+    }
+
+   
+    public Iterator children(Position p) {
+        NodeAVL node = (NodeAVL) p;
+        if(isExternal(node))
+            return null;
+        else{
+            ArrayList<NodeAVL> children = new ArrayList<NodeAVL>();
+            children.add(node.getLeft());
+            children.add(node.getRight());
+            return (Iterator) children;
+        }
+    }
+
+    
+    public boolean isExternal(Position p) {
+        NodeAVL node = (NodeAVL) p;
+        return node.getLeft()== null && node.getRight()== null;
+    }
+
+  
+    public boolean isInternal(Position p) {
+         NodeAVL node = (NodeAVL) p;
+         return !isExternal(node); // ou return node.getLeft()!= null && node.getRight()!= null;
+    }
+
+    
+    public boolean isRoot(Position p) {
+        NodeAVL node = (NodeAVL) p;
+        return node == root;
+    }
+
+   
+    public Object replace(Position p, Object o) {
+        NodeAVL node = (NodeAVL) p;
+        Object aux = node.getElement();
+        node.setElement(o);
+        return aux;   
+    }
+    
+  
+
+
+
     
     
+    private NodeAVL removeLower(NodeAVL node) throws InvalidPositionException{
+        if (node == null) {
+            return root;
+        } 
+        else if (node.getLeft() != null) {
+            node.setLeft(removeLower(node.getLeft()));
+            return node;
+        } 
+        else
+            return node.getRight();
+    }
+
+  
+    public NodeAVL getSibling(NodeAVL no) throws InvalidPositionException {
+        if(isEmpty()){
+            throw new InvalidPositionException("ávore vazia.");
+        }
+        NodeAVL node = no.getParent();
+        NodeAVL nodeAux = null;
+        if(node.getLeft()==no)
+            nodeAux = node.getRight();
+        else if(node.getRight()==no)
+            nodeAux =  node.getLeft();
+        return nodeAux;
+    }
     
     
+    public void add(int key, Object o) throws InvalidPositionException {
+        NodeAVL node = new NodeAVL(key,o,null);
+        NodeAVL node2 = (NodeAVL) search(key,root());
+        if(key == node2.getKey()){
+           throw new InvalidPositionException("Posição inválida");
+        }
+        else if(key<node2.getKey()){
+            node2.setLeft(node);
+            node.setParent(node2);
+            size++;
+        }
+        
+        else{
+            node2.setRight(node);
+            node.setParent(node2);
+            size++;
+        }
+       
+    }
+    //Para o root como primeiro nodo
+
+  
+    
+    public void insertAtExternal(NodeAVL node,Object o){
+        node.setLeft(null);
+        node.setRight(null);
+        node.setElement(o);
+        size++;
+    }
     
     
+    public void swapElements(Position p1, Position p2) throws InvalidPositionException {
+        NodeAVL node1 = (NodeAVL) p1;
+        NodeAVL node2 = (NodeAVL) p2;
+        Object aux = node1.getElement();
+        node1.setElement(node2.getElement());
+        node2.setElement(aux);
+        
+    }
     
+    //Métodos de ordenação
+    public ArrayList<NodeAVL> posOrder(Position p){
+
+        NodeAVL node = (NodeAVL) p;
+        if(node.getLeft() != null){
+            posOrder(node.getLeft());
+        }
+        if(node.getRight() != null)
+            posOrder(node.getRight());
+        nodesPost.add(node);
+        return nodesPost;
+    }
     
+    public ArrayList<NodeAVL> preOrder(Position p){
+        NodeAVL node = (NodeAVL) p;
+        nodesPre.add(node);
+        if(node.getLeft() != null)
+            preOrder(node.getLeft());
+        if(node.getRight()!=null)
+            preOrder(node.getRight());
+        return nodesPre;
+    }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    public ArrayList<NodeAVL> inOrder(Position p){
+        NodeAVL node = (NodeAVL) p;
+        if(isInternal(node)){
+            inOrder(node.getLeft());
+            nodesIn.add(node);
+        }
+        else if(node != null){
+            nodesIn.add(node);
+        }
+        if(isInternal(node)){
+            inOrder(node.getRight());
+        }
+        return nodesIn;    
+       
+    }
+   
+        
+    public void printTree(NodeAVL no, String indent, Boolean last){
+        System.out.println(indent + "+- " + no.getElement());
+        indent += last ? "   " : "|  ";
+                
+        Iterator itr = inOrder(no);
+        while(itr.hasNext()){
+            NodeAVL n = (NodeAVL)itr.next();
+            printTree(n, indent, itr.hasNext());
+        }
+    }
+     
     
 }
+
+    
+    
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   
