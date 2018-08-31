@@ -216,7 +216,48 @@ public class AVLTree extends ClassBT {
         } 
     }
     
-    
+    //passear ávore e alterar os fatores de balanceamento
+    public void passerChangeFB(NodeAVL node, int method) throws InvalidPositionException{
+        
+        //se o method é igual a 1, significa que se trata do método de inserção
+        NodeAVL passer;
+        if(isRoot(node))
+            return;
+        else
+            passer = node.getParent();
+        
+        if (method == 1){
+            //Se o nodo for esquerdo significa que o pai irá receber +1 no fator de balanceamento ou -1 caso direito
+            if(passer.getLeft() == node)
+                passer.setKey(passer.getKey()+1);
+            else
+                passer.setKey(passer.getKey()-1);
+            // A codição de parada no caso da inserção
+            if(passer.getFb() == 0)
+                return;
+            //Verificar se após a alteração do fator de balanceamento a subArvore desbalanceou
+            if(isUnbalanced(passer))
+                balance(passer);
+            passerChangeFB(passer, 1);
+        }
+        //se for diferente de 1 siginifica que o método é uma remoção
+        else{
+         //Se o nodo for esquerdo significa que o pai irá receber -1 no fator de balanceamento ou +1 caso direito
+            if(passer.getLeft() == node)
+                passer.setKey(passer.getKey()-1);
+            else
+                passer.setKey(passer.getKey()+1);
+            // A codição de parada no caso da remoção
+            if(passer.getFb() != 0)
+                return;
+            //Verificar se após a alteração do fator de balanceamento a subArvore desbalanceou
+            if(isUnbalanced(passer))
+                balance(passer);
+            passerChangeFB(passer, 1);
+            
+        }
+            
+    }
     
     
     
