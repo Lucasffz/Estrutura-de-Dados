@@ -1,9 +1,10 @@
 package AVL;
 
 import binary.ClassBT;
-import binary.NodeAVL;
+import AVL.NodeAVL;
 import interfaces.InvalidPositionException;
 import interfaces.Position;
+import static java.lang.Math.max;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -46,10 +47,12 @@ public class AVLTree  {
           //Se a chave do nó a ser inserido for menor ou igual a do nó retornado na busca, inserimos o nó o lado esquerdo
           if( node.getKey() <= auxnode.getKey() ){
                 auxnode.setLeft(node);
+                passerChangeFB(node, 1);
                 size++;
             }
           else{
               auxnode.setRight(node);
+              passerChangeFB(node, 1);
               size++;
           }
       }
@@ -119,6 +122,8 @@ public class AVLTree  {
             size--;
             return antkey;
          }
+         passerChangeFB(node, 0);
+            
         return null;
     }
      
@@ -155,57 +160,78 @@ public class AVLTree  {
       //O nó que está a direita do desbalanceado irá rotacionar e se tonará o novo pai deste nó  
       NodeAVL newParent = node.getRight();
       // Se o novo pai tiver uma subarvore a sua esquerda, essa subárvore passará a ser o filho direito do nó rotacionado; 
-      if(hasLeft(newParent))
+      if(hasLeft(newParent)){
           node.setRight(newParent.getLeft());
+          newParent.getLeft().setParent(node);
+      }
       else
           node.setRight(null);
-      // Node passa a ser o pai da antiga subarvore direita
-      node.getLeft().setParent(node);
+      //node passa a ser o filho esquerdo 
+      newParent.setLeft(node);
       //verifica se o node possui um pai se sim o node newParent irá receber
-      if(node.getParent() != null)
-          newParent.setParent(node.getParent());
-      else
+      if(isRoot(node))
           newParent.setParent(null);
+      //caso não seja o root, verifica em qual lado o node está e atribui ao newParent
+      else{
+          newParent.setParent(node.getParent());
+          if(node.getParent().getLeft() == node)
+              node.getParent().setLeft(newParent);
+          else
+              node.getParent().setRight(newParent);
+      }
       //seta o new parent como pai do nodo
       node.setParent(newParent);
       
-      // aqui no fim atualiza o fato de balanceamento
+       int new_FB_B = node.getFb() - 1 - max(newParent.getFb(), 0);
+       int new_FB_A = newParent.getFb() - 1 + min(new_FB_B, 0);
+       
         
     }
     
     public void simpleRotationRight (NodeAVL node) throws InvalidPositionException{
       NodeAVL newParent = node.getLeft();
         
-      if(hasRight(newParent))
+      if(hasRight(newParent)){
           node.setLeft(newParent.getRight());
+          newParent.getRight().setParent(node);
+      }
       else
           node.setLeft(null);
-      // Node passa a ser o pai da antiga subarvore direita
-      node.getRight().setParent(node);
+     
+      newParent.setRight(node);
       //verifica se o node possui um pai se sim o node newParent irá receber
-      if(node.getParent() != null)
-          newParent.setParent(node.getParent());
-      else
+      if(isRoot(node)){
           newParent.setParent(null);
+          root = newParent;
+      }
+      else{
+          newParent.setParent(node.getParent());
+          if(node.getParent().getLeft() == node)
+              node.getParent().setLeft(newParent);
+          else
+              node.getParent().setRight(newParent);
+          
+      }    
       //seta o new parent como pai do nodo
       node.setParent(newParent);
       
-      //Atualiza o fator de balanceamento dos 2 nodos alterados
+       int new_FB_B = node.getFb() - 1 - max(newParent.getFb(), 0);
+       int new_FB_A = newParent.getFb() - 1 + min(new_FB_B, 0);
         
     }
     
-    public void doubleRotationLeft (NodeAVL node){
+    public void doubleRotationLeft (NodeAVL node) throws InvalidPositionException{
         simpleRotationRight(node);
         simpleRotationLeft(node);
     }
     
-    public void DoubleRotationRight (NodeAVL node){
+    public void DoubleRotationRight (NodeAVL node) throws InvalidPositionException{
         simpleRotationRight(node);
         simpleRotationLeft(node);
     }
     
     
-    public void balance(NodeAVL node){
+    public void balance(NodeAVL node) throws InvalidPositionException{
         if(node.getFb() >= 2){
             if(node.getLeft().getFb() >=0)
                 simpleRotationRight(node);
@@ -221,9 +247,7 @@ public class AVLTree  {
     }
     
     //passear ávore e alterar os fatores de balanceamento
-    public void passerChangeFB(NodeAVL node, int method) throws InvalidPositionException{
-        
-       
+    public void passerChangeFB(NodeAVL node, int method) throws InvalidPositionException{      
         NodeAVL passer;
         if(isRoot(node))
             return;
@@ -257,7 +281,7 @@ public class AVLTree  {
             //Verificar se após a alteração do fator de balanceamento a subArvore desbalanceou
             if(isUnbalanced(passer))
                 balance(passer);
-            passerChangeFB(passer, 1);
+            passerChangeFB(passer, 0);
             
         }
             
@@ -362,7 +386,7 @@ public class AVLTree  {
     }
 
     
-    public Iterator elements() {
+    /*public Iterator elements() {
         if(isEmpty())
             return null;
         ArrayList<Object> elements = new ArrayList<Object>();
@@ -372,15 +396,15 @@ public class AVLTree  {
             elements.add(node.getElement());
         }
         return elements.iterator();
-    }
+    }*/
     
     
-    public Iterator nos() {   
+    /*public Iterator nos() {   
         if(root == null)
             return null;
         else
             return inOrder(root);
-    }
+    }*/
 
    
     public NodeAVL root() {
@@ -549,7 +573,7 @@ public class AVLTree  {
     }
    
         
-    public void printTree(NodeAVL no, String indent, Boolean last){
+    /*public void printTree(NodeAVL no, String indent, Boolean last){
         System.out.println(indent + "+- " + no.getElement());
         indent += last ? "   " : "|  ";
                 
@@ -558,6 +582,10 @@ public class AVLTree  {
             NodeAVL n = (NodeAVL)itr.next();
             printTree(n, indent, itr.hasNext());
         }
+    }*/
+
+    private int min(int new_FB_B, int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
      
     
