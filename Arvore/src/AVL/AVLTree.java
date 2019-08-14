@@ -8,11 +8,6 @@ import static java.lang.Math.max;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  *
@@ -31,8 +26,8 @@ public class AVLTree  {
         }
     
         
-      public void insert(Object o, int key) throws InvalidPositionException{
-          NodeAVL node = new NodeAVL (key,o,null);
+      public void insert(int key) throws InvalidPositionException{
+          NodeAVL node = new NodeAVL (key,null);
           if(isEmpty()){
               setRoot(node);
               size = 1;       
@@ -44,12 +39,13 @@ public class AVLTree  {
       public void insert(NodeAVL node,NodeAVL subTree) throws InvalidPositionException{
           NodeAVL auxnode = (NodeAVL) search(node.getKey(),subTree);
           node.setParent(auxnode);
-          //Se a chave do nó a ser inserido for menor ou igual a do nó retornado na busca, inserimos o nó o lado esquerdo
+          //Se a chave do node a ser inserido for menor ou igual a do node retornado na busca, inserimos o node ao lado esquerdo
           if( node.getKey() <= auxnode.getKey() ){
                 auxnode.setLeft(node);
                 passerChangeFB(node, 1);
                 size++;
             }
+          //caso contrario ao lado direito
           else{
               auxnode.setRight(node);
               passerChangeFB(node, 1);
@@ -59,16 +55,18 @@ public class AVLTree  {
          
         
      public Object remover(int key) throws InvalidPositionException {
+    	
         if( isEmpty()){
-            throw new InvalidPositionException("Ávore vazia");
+            throw new InvalidPositionException("Arvore vazia");
         }
+        
         NodeAVL node = (NodeAVL) search(key, root);
         if(isRoot(node)){
-            throw new InvalidPositionException("Não é possível remover a raiz");
+            throw new InvalidPositionException("Nao e possivel remover a raiz");
          }
-        //Sendo nó externo
+        //Sendo nao externo
         if(isExternal(node)){
-            //se a chave do nó a ser removido for menor que a chave do pai, siginifica que ele esta
+            //se a chave do n�o a ser removido for menor que a chave do pai, siginifica que ele esta
             //a esquerda do pai
             if(node.getKey()<= node.getParent().getKey())
                 node.getParent().setLeft(null);         
@@ -127,24 +125,25 @@ public class AVLTree  {
         return null;
     }
      
-     public Position search(int key,Position p){
+     public Position search(int key,Position p){ //okay
         NodeAVL node = (NodeAVL) p;
-        if(isExternal(node)) // Nesse caso o nó inserido não tem filhos
+        if(isExternal(node)) // Nesse caso o node a ser buscado nao tem filhos
             return node;
-        if(key < node.getKey()){//Procura o nodo na subarvore esquerda
+        
+        if(key < node.getKey()){ //Procura o nodo na subarvore esquerda
             if(node.getLeft() == null)
-                return node;
+                return node; 
             return search(key,node.getLeft());
         }
         else if(key == node.getKey()) 
             return node;
-        else{ //procura o nó na subarvore direita
+        else{ //procura o node na subarvore direita
             if(node.getRight() == null)
                 return node;
             return search(key,node.getRight());
         }
     }
-    //método pra pegar o fator de balanceamento, verificando a altura dos filhos
+    //metodo pra pegar o fator de balanceamento, verificando a altura dos filhos
     public int checkFB(NodeAVL node){
         return height(node.getLeft()) - height(node.getRight());
     }
@@ -246,16 +245,16 @@ public class AVLTree  {
         } 
     }
     
-    //passear ávore e alterar os fatores de balanceamento
+    //passear arvore e alterar os fatores de balanceamento
     public void passerChangeFB(NodeAVL node, int method) throws InvalidPositionException{      
         NodeAVL passer;
         if(isRoot(node))
             return;
         else
             passer = node.getParent();
-         //se o method é igual a 1, significa que se trata do método de inserção
+         // significa que se trata do metodo de insercao
         if (method == 1){
-            //Se o nodo for esquerdo significa que o pai irá receber +1 no fator de balanceamento ou -1 caso direito
+            //Se o nodo for esquerdo significa que o pai ira receber +1 no fator de balanceamento ou -1 caso direito
             if(passer.getLeft() == node)
                 passer.setKey(passer.getKey()+1);
             else
@@ -493,26 +492,8 @@ public class AVLTree  {
     }
     
     
-    public void add(int key, Object o) throws InvalidPositionException {
-        NodeAVL node = new NodeAVL(key,o,null);
-        NodeAVL node2 = (NodeAVL) search(key,root());
-        if(key == node2.getKey()){
-           throw new InvalidPositionException("Posição inválida");
-        }
-        else if(key<node2.getKey()){
-            node2.setLeft(node);
-            node.setParent(node2);
-            size++;
-        }
-        
-        else{
-            node2.setRight(node);
-            node.setParent(node2);
-            size++;
-        }
-       
-    }
-    //Para o root como primeiro nodo
+   
+ 
 
   
     

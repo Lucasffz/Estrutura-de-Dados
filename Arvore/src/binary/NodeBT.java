@@ -15,6 +15,11 @@ public class NodeBT implements Position{
         this.element = element;
         this.parent = parent;      
     }
+    
+    public NodeBT(int key, NodeBT parent) {
+    	this.key = key;
+    	this.parent = parent;
+    }
 
     @Override
     public Object getElement() {

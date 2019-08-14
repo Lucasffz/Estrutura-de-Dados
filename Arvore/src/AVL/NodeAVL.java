@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package AVL;
 
 import binary.NodeBT;
@@ -13,10 +8,14 @@ import binary.NodeBT;
  */
 public class NodeAVL extends NodeBT {
     private NodeAVL parent,left,right;
-    private int fb;
+    private int fb; // Fator de balanceamento
     
     public NodeAVL(int key, Object element, NodeBT parent) {
         super(key, element, parent);
+    }
+    
+    public NodeAVL(int key, NodeBT parent) {
+    	super(key, parent);
     }
     
     public int getFb(){
