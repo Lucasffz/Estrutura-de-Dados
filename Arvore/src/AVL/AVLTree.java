@@ -37,7 +37,7 @@ public class AVLTree  {
       }
            
       public void insert(NodeAVL node,NodeAVL subTree) throws InvalidPositionException{
-          NodeAVL auxnode = (NodeAVL) search(node.getKey(),subTree);
+          NodeAVL auxnode = (NodeAVL) search(node.getKey(),subTree); // no pesquisador sera o pai do nó a ser inserido
           node.setParent(auxnode);
           //Se a chave do node a ser inserido for menor ou igual a do node retornado na busca, inserimos o node ao lado esquerdo
           if( node.getKey() <= auxnode.getKey() ){
@@ -66,7 +66,7 @@ public class AVLTree  {
          }
         //Sendo nao externo
         if(isExternal(node)){
-            //se a chave do n�o a ser removido for menor que a chave do pai, siginifica que ele esta
+            //se a chave do n�o a ser removido for menor que a chave do pai, siginifica que ele esta
             //a esquerda do pai
             if(node.getKey()<= node.getParent().getKey())
                 node.getParent().setLeft(null);         
@@ -225,19 +225,19 @@ public class AVLTree  {
     }
     
     public void DoubleRotationRight (NodeAVL node) throws InvalidPositionException{
-        simpleRotationRight(node);
         simpleRotationLeft(node);
+        simpleRotationRight(node);
     }
     
     
     public void balance(NodeAVL node) throws InvalidPositionException{
-        if(node.getFb() >= 2){
+        if(node.getFb() >= 2){ // significa que a subarvore esquerda é maior rotacionamos para direita
             if(node.getLeft().getFb() >=0)
                 simpleRotationRight(node);
             else
                 DoubleRotationRight(node);
         }
-        else{
+        else{ //nesse caso a subarvore direita é maior rotacionamos para esquerda
             if(node.getRight().getFb() <0)
                    simpleRotationLeft(node);
             else
@@ -256,9 +256,9 @@ public class AVLTree  {
         if (method == 1){
             //Se o nodo for esquerdo significa que o pai ira receber +1 no fator de balanceamento ou -1 caso direito
             if(passer.getLeft() == node)
-                passer.setKey(passer.getKey()+1);
+                passer.setFb(passer.getFb()+1);
             else
-                passer.setKey(passer.getKey()-1);
+                passer.setFb(passer.getFb()-1);
             // A codição de parada no caso da inserção
             if(passer.getFb() == 0)
                 return;
@@ -271,9 +271,9 @@ public class AVLTree  {
         else{
          //Se o nodo for esquerdo significa que o pai irá receber -1 no fator de balanceamento ou +1 caso direito
             if(passer.getLeft() == node)
-                passer.setKey(passer.getKey()-1);
+                passer.setFb(passer.getFb()-1);
             else
-                passer.setKey(passer.getKey()+1);
+                passer.setFb(passer.getFb()+1);
             // A codição de parada no caso da remoção
             if(passer.getFb() != 0)
                 return;

@@ -8,7 +8,7 @@ import interfaces.InvalidPositionException;
 import interfaces.Position;
 import java.util.Iterator;
 import AVL.AVLTree;
-
+import AVL.NodeAVL;
 
 public class Main {
     
@@ -16,10 +16,17 @@ public class Main {
         
       
     	AVLTree arvore = new AVLTree();
-    	
     	arvore.insert(10);
-    	arvore.insert(8);
-    	System.out.println(arvore.remover(8));
+    
+   
+        
+               
+        NodeAVL raiz = (NodeAVL) arvore.search(10, arvore.root());
+        
+        System.out.println(arvore.root().getFb());
+        
+        
+    	
     	
            
       

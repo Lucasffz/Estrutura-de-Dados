@@ -16,6 +16,7 @@ public class NodeAVL extends NodeBT {
     
     public NodeAVL(int key, NodeBT parent) {
     	super(key, parent);
+        this.fb = 0;
     }
     
     public int getFb(){
