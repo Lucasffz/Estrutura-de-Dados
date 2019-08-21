@@ -538,20 +538,23 @@ public class AVLTree  {
         return nodesPre;
     }
     
-    public Iterator inOrder(Position p){
-        NodeAVL node = (NodeAVL) p;
-        if(isInternal(node)){
-            inOrder(node.getLeft());
-            nodesIn.add(node);
+    public Iterator inOrder(){
+        nodesIn = new ArrayList();
+        return (root()==null)?null:inOrder(root()); 
+    }
+    
+    public Iterator inOrder(NodeAVL v) { 
+        if(isInternal(v)){
+            inOrder(v.getLeft()); 
+            nodesIn.add(v);
+        } else if(v!=null) {
+            nodesIn.add(v);
         }
-        else if(node != null){
-            nodesIn.add(node);
+        if(isInternal(v)){
+            inOrder(v.getRight());
         }
-        if(isInternal(node)){
-            inOrder(node.getRight());
-        }
-        return (Iterator) nodesIn;    
-       
+        Iterator itr = nodesIn.iterator();
+        return itr;
     }
    
         
@@ -568,7 +571,7 @@ public class AVLTree  {
     
     
     
-  /*  public String toString () {
+  public String toString () {
         Iterator itr = inOrder(root);
         if (itr == null) return "";
         int h = this.height(root) + 5;
@@ -597,7 +600,7 @@ public class AVLTree  {
         }
         
         return str;
-    }*/
+    };
     
     
     

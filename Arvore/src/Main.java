@@ -21,13 +21,14 @@ public class Main {
         arvore.insert(14);
         NodeAVL B = arvore.root().getRight();
         arvore.insert(19);
+        NodeAVL C = arvore.root().getRight();
         
         
          
+       
         
-        System.out.println(A.getFb());
-        System.out.println(B.getRight().getKey());
-        //System.out.println(arvore.root().getFb());
+        System.out.println(arvore.toString());
+        
         
         
     	
