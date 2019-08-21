@@ -17,13 +17,17 @@ public class Main {
       
     	AVLTree arvore = new AVLTree();
     	arvore.insert(10);
-    
-   
+        NodeAVL A = arvore.root();
+        arvore.insert(14);
+        NodeAVL B = arvore.root().getRight();
+        arvore.insert(19);
         
-               
-        NodeAVL raiz = (NodeAVL) arvore.search(10, arvore.root());
         
-        System.out.println(arvore.root().getFb());
+         
+        
+        System.out.println(A.getFb());
+        System.out.println(B.getRight().getKey());
+        //System.out.println(arvore.root().getFb());
         
         
     	

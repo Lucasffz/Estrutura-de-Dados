@@ -5,6 +5,7 @@ import AVL.NodeAVL;
 import interfaces.InvalidPositionException;
 import interfaces.Position;
 import static java.lang.Math.max;
+import static java.lang.Math.min;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -164,26 +165,29 @@ public class AVLTree  {
           newParent.getLeft().setParent(node);
       }
       else
-          node.setRight(null);
-      //node passa a ser o filho esquerdo 
-      newParent.setLeft(node);
+          node.setRight(null);  
       //verifica se o node possui um pai se sim o node newParent irá receber
-      if(isRoot(node))
+      if(isRoot(node)){
+          setRoot(newParent);
           newParent.setParent(null);
+      }    
       //caso não seja o root, verifica em qual lado o node está e atribui ao newParent
       else{
-          newParent.setParent(node.getParent());
+          newParent.setParent(node.getParent()); // O novo pai recebe o antigo pai de node
           if(node.getParent().getLeft() == node)
               node.getParent().setLeft(newParent);
           else
               node.getParent().setRight(newParent);
       }
+       //node passa a ser o filho esquerdo 
+       newParent.setLeft(node);
       //seta o new parent como pai do nodo
       node.setParent(newParent);
       
-       int new_FB_B = node.getFb() - 1 - max(newParent.getFb(), 0);
-       int new_FB_A = newParent.getFb() - 1 + min(new_FB_B, 0);
-       
+       int new_FB_B = (node.getFb()+ 1) - min(newParent.getFb(), 0);
+       int new_FB_A = (newParent.getFb()+1) + max(new_FB_B, 0);
+       newParent.setFb(new_FB_A);
+       node.setFb(new_FB_B);
         
     }
     
@@ -196,9 +200,7 @@ public class AVLTree  {
       }
       else
           node.setLeft(null);
-     
-      newParent.setRight(node);
-      //verifica se o node possui um pai se sim o node newParent irá receber
+       //verifica se o node possui um pai se sim o node newParent irá receber
       if(isRoot(node)){
           newParent.setParent(null);
           root = newParent;
@@ -210,13 +212,18 @@ public class AVLTree  {
           else
               node.getParent().setRight(newParent);
           
-      }    
+      }
+      newParent.setRight(node);
       //seta o new parent como pai do nodo
       node.setParent(newParent);
-      
-       int new_FB_B = node.getFb() - 1 - max(newParent.getFb(), 0);
-       int new_FB_A = newParent.getFb() - 1 + min(new_FB_B, 0);
-        
+        // node é B e newParente é A
+        // B + 1 - min(A,0)
+       int new_FB_B = (node.getFb() -1) - max(newParent.getFb(), 0);
+       // A -
+       int new_FB_A = (newParent.getFb() -1) + min(new_FB_B, 0);
+       newParent.setFb(new_FB_A);
+       node.setFb(new_FB_B);
+       
     }
     
     public void doubleRotationLeft (NodeAVL node) throws InvalidPositionException{
@@ -385,26 +392,20 @@ public class AVLTree  {
     }
 
     
-    /*public Iterator elements() {
+    public Iterator elements() {
         if(isEmpty())
             return null;
         ArrayList<Object> elements = new ArrayList<Object>();
-        Iterator nodes = inOrder(root);
+        Iterator nodes = (Iterator) inOrder(root);
         while(nodes.hasNext()){
             NodeAVL node = (NodeAVL) nodes.next();
             elements.add(node.getElement());
         }
         return elements.iterator();
-    }*/
+    };
     
     
-    /*public Iterator nos() {   
-        if(root == null)
-            return null;
-        else
-            return inOrder(root);
-    }*/
-
+ 
    
     public NodeAVL root() {
        return root;
@@ -537,7 +538,7 @@ public class AVLTree  {
         return nodesPre;
     }
     
-    public ArrayList<NodeAVL> inOrder(Position p){
+    public Iterator inOrder(Position p){
         NodeAVL node = (NodeAVL) p;
         if(isInternal(node)){
             inOrder(node.getLeft());
@@ -549,7 +550,7 @@ public class AVLTree  {
         if(isInternal(node)){
             inOrder(node.getRight());
         }
-        return nodesIn;    
+        return (Iterator) nodesIn;    
        
     }
    
@@ -564,10 +565,53 @@ public class AVLTree  {
             printTree(n, indent, itr.hasNext());
         }
     }*/
+    
+    
+    
+  /*  public String toString () {
+        Iterator itr = inOrder(root);
+        if (itr == null) return "";
+        int h = this.height(root) + 5;
+        int l = this.size() + 5;
+        
+        Object matrix[][] = new Object[h][l];
+//        System.out.println("h: " + h + ", l:" + l);
+        
+        int i = 0;
+        while (itr.hasNext()) {
+            NodeAVL n = (NodeAVL) itr.next();
+            int d = this.depth(n);
+//            System.out.println("d: " + d + ", i:" + i);
+//            System.out.println(n.getElemento());
+            matrix[d][i] = n.getKey();
+            i++;
+        }
+        
+        String str = "";
+        
+        for (i = 0; i < h; i++){
+            for (int j = 0; j < l; j++) {
+                str += matrix[i][j] == null ? "  " : (((int) matrix[i][j] >= 0) && ((int) matrix[i][j] < 10)  ? " " + matrix[i][j] : matrix[i][j]);
+            }
+            str += "\n";
+        }
+        
+        return str;
+    }*/
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    private int min(int new_FB_B, int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
      
     
 }
