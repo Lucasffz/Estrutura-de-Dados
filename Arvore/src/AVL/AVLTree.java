@@ -437,7 +437,7 @@ public class AVLTree  {
     
     public boolean isExternal(Position p) {
         NodeAVL node = (NodeAVL) p;
-        return node.getLeft()== null && node.getRight()== null;
+        return (node==null)? true : (node.getRight()==null && node.getLeft()==null);
     }
 
   

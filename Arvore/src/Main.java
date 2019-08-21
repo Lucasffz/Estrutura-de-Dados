@@ -18,11 +18,11 @@ public class Main {
     	AVLTree arvore = new AVLTree();
     	arvore.insert(10);
         NodeAVL A = arvore.root();
-        arvore.insert(14);
-        NodeAVL B = arvore.root().getRight();
-        arvore.insert(19);
-        NodeAVL C = arvore.root().getRight();
+        arvore.insert(8);
+        arvore.insert(6);
+      
         
+       
         
          
        
