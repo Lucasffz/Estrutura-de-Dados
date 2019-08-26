@@ -17,18 +17,15 @@ public class Main {
       
     	AVLTree arvore = new AVLTree();
     	arvore.insert(10);
-        NodeAVL A = arvore.root();
-        arvore.insert(8);
-        arvore.insert(6);
-      
-        
-       
+        arvore.insert(12);
+        arvore.insert(11);
+
         
          
        
         
         System.out.println(arvore.toString());
-        
+        System.out.println(arvore.root().getFb());
         
         
     	

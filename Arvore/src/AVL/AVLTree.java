@@ -183,9 +183,9 @@ public class AVLTree  {
        newParent.setLeft(node);
       //seta o new parent como pai do nodo
       node.setParent(newParent);
-      
-       int new_FB_B = (node.getFb()+ 1) - min(newParent.getFb(), 0);
-       int new_FB_A = (newParent.getFb()+1) + max(new_FB_B, 0);
+       int Fb_b = node.getFb(),Fb_a = newParent.getFb(), new_FB_B = 0,new_FB_A = 0; 
+       new_FB_B = Fb_b +1 - min(Fb_a, 0);
+       new_FB_A = Fb_a +1 + max(new_FB_B, 0);
        newParent.setFb(new_FB_A);
        node.setFb(new_FB_B);
         
@@ -218,21 +218,22 @@ public class AVLTree  {
       node.setParent(newParent);
         // node é B e newParente é A
         // B + 1 - min(A,0)
-       int new_FB_B = (node.getFb() -1) - max(newParent.getFb(), 0);
-       // A -
-       int new_FB_A = (newParent.getFb() -1) + min(new_FB_B, 0);
+        
+       int Fb_b = node.getFb(),Fb_a = newParent.getFb(), new_FB_B = 0,new_FB_A = 0; 
+       new_FB_B = Fb_b - 1 - max(Fb_a, 0);
+       new_FB_A = Fb_a -1 + min(new_FB_B, 0);
        newParent.setFb(new_FB_A);
        node.setFb(new_FB_B);
        
     }
     
     public void doubleRotationLeft (NodeAVL node) throws InvalidPositionException{
-        simpleRotationRight(node);
+        simpleRotationRight(node.getRight());
         simpleRotationLeft(node);
     }
     
     public void DoubleRotationRight (NodeAVL node) throws InvalidPositionException{
-        simpleRotationLeft(node);
+        simpleRotationLeft(node.getLeft());
         simpleRotationRight(node);
     }
     
@@ -574,18 +575,16 @@ public class AVLTree  {
   public String toString () {
         Iterator itr = inOrder(root);
         if (itr == null) return "";
-        int h = this.height(root) + 5;
-        int l = this.size() + 5;
+        int h = this.height(root) + 5;// altura mais 5
+        int l = this.size() + 5; // Largura é a quantidade mais 5
         
         Object matrix[][] = new Object[h][l];
-//        System.out.println("h: " + h + ", l:" + l);
+
         
         int i = 0;
         while (itr.hasNext()) {
             NodeAVL n = (NodeAVL) itr.next();
             int d = this.depth(n);
-//            System.out.println("d: " + d + ", i:" + i);
-//            System.out.println(n.getElemento());
             matrix[d][i] = n.getKey();
             i++;
         }
