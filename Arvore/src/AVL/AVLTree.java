@@ -67,7 +67,7 @@ public class AVLTree  {
          }
         //Sendo nao externo
         if(isExternal(node)){
-            //se a chave do n�o a ser removido for menor que a chave do pai, siginifica que ele esta
+            //se a chave do nodeo a ser removido for menor que a chave do pai, siginifica que ele esta
             //a esquerda do pai
             if(node.getKey()<= node.getParent().getKey())
                 node.getParent().setLeft(null);         
@@ -86,7 +86,7 @@ public class AVLTree  {
             }
             else{
                 node.getParent().setRight(node.getRight());
-                node.getRight().setParent(node.getRight());
+                node.getLeft().setParent(node.getLeft());
             }
             node.setParent(null);
             size--;
