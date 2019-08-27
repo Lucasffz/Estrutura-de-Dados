@@ -43,7 +43,7 @@ public class AVLTree  {
           //Se a chave do node a ser inserido for menor ou igual a do node retornado na busca, inserimos o node ao lado esquerdo
           if( node.getKey() <= auxnode.getKey() ){
                 auxnode.setLeft(node);
-                passerChangeFB(node, 1);
+                passerChangeFB(node, 1,0);
                 size++;
             }
           else if(node.getKey() == auxnode.getKey()){
@@ -53,14 +53,14 @@ public class AVLTree  {
           //caso contrario ao lado direito
           else{
               auxnode.setRight(node);
-              passerChangeFB(node, 1);
+              passerChangeFB(node, 1,0);
               size++;
           }
       }
          
         
      public Object remover(int key) throws InvalidPositionException {
-    	
+    	int lado;
         if( isEmpty()){
             throw new InvalidPositionException("Arvore vazia");
         }
@@ -69,36 +69,40 @@ public class AVLTree  {
         if(isRoot(node)){
             throw new InvalidPositionException("Nao e possivel remover a raiz");
          }
-        //Sendo nao externo
+      
+        NodeAVL parent = node.getParent();
+        lado = getSide(node);
         if(isExternal(node)){
-            //se a chave do n�o a ser removido for menor que a chave do pai, siginifica que ele esta
+            //se a chave do nodeo a ser removido for menor que a chave do pai, siginifica que ele esta
             //a esquerda do pai
-            if(node.getKey()<= node.getParent().getKey())
+            if(lado == 1)
                 node.getParent().setLeft(null);         
             else
                 node.getParent().setRight(null);
             node.setParent(null);
             size--;
+            passerChangeFB(parent,0,lado);
             return node.getKey();
         }
         //caso tenha um filho esquerdo
         if(hasLeft(node) && !hasRight(node)){
             //caso o nó a ser removido esteja do lado esquerdo
-            if(node.getKey()<= node.getParent().getKey()){
+            if(lado == 1){
                 node.getParent().setLeft(node.getLeft());
                 node.getLeft().setParent(node.getParent());
             }
             else{
                 node.getParent().setRight(node.getRight());
-                node.getRight().setParent(node.getRight());
+                node.getLeft().setParent(node.getLeft());
             }
             node.setParent(null);
             size--;
+            passerChangeFB(parent,0,lado);
             return node.getKey();
         }
         //caso tenha um filho direito
         if(!hasLeft(node) && hasRight(node)){
-            if(node.getKey()<= node.getParent().getKey()){
+            if(lado == 1){
                 node.getParent().setLeft(node.getRight());
                 node.getRight().setParent(node.getParent());
                 
@@ -109,6 +113,7 @@ public class AVLTree  {
             }
             node.setParent(null);
             size--;
+            passerChangeFB(parent, 0, lado);
             return node.getKey();
         }
         //No caso do nó ter dois filhos, precisamos descobrir o substituto
@@ -123,9 +128,10 @@ public class AVLTree  {
             node.setKey(auxKey);
             node.setElement(element);
             size--;
+            passerChangeFB(parent,0,lado);
             return antkey;
          }
-         passerChangeFB(node, 0);
+         
             
         return null;
     }
@@ -190,9 +196,8 @@ public class AVLTree  {
        int Fb_b = node.getFb(),Fb_a = newParent.getFb(), new_FB_B = 0,new_FB_A = 0; 
        new_FB_B = Fb_b +1 - Math.min(Fb_a, 0);
        new_FB_A = Fb_a +1 + Math.max(new_FB_B, 0);
-       System.out.println("Antigo: "+Fb_a +" novo: " + new_FB_A );
        newParent.setFb(new_FB_A);
-       System.out.println("newPArentFB: " + newParent.getFb() );
+    
        node.setFb(new_FB_B);
         
     }
@@ -228,7 +233,7 @@ public class AVLTree  {
        int Fb_b = node.getFb(),Fb_a = newParent.getFb(), new_FB_B = 0,new_FB_A = 0; 
        new_FB_B = Fb_b - 1 - Math.max(Fb_a, 0);
        new_FB_A = Fb_a -1 + Math.min(new_FB_B, 0);
-       System.out.println("Antigo: "+Fb_a +" novo: " + new_FB_A );
+    
        
        
        
@@ -265,47 +270,47 @@ public class AVLTree  {
     }
     
     //passear arvore e alterar os fatores de balanceamento
-    public void passerChangeFB(NodeAVL node, int method) throws InvalidPositionException{      
+    public void passerChangeFB(NodeAVL node, int method, int lado) throws InvalidPositionException{      
         NodeAVL passer;
         if(isRoot(node))
             return;
-        else
-            passer = node.getParent();
+        
+          
          // significa que se trata do metodo de insercao
         if (method == 1){
+             passer = node.getParent();
             //Se o nodo for esquerdo significa que o pai ira receber +1 no fator de balanceamento ou -1 caso direito
             if(passer.getLeft() == node)
                 passer.setFb(passer.getFb()+1);
             else if(passer.getRight() == node)
-                passer.setFb(passer.getFb()-1);
-           // A codição de parada no caso da inserção
-            
+                passer.setFb(passer.getFb()-1);          
             //Verificar se após a alteração do fator de balanceamento a subArvore desbalanceou
             if(isUnbalanced(passer))
                 balance(passer);
-            
-            
-            
+             // A codição de parada no caso da inserção
             if(passer.getFb() == 0)
                 return;
             
-            
-            passerChangeFB(passer, 1);
+            passerChangeFB(passer, 1, 0);
         }
         //se for diferente de 1 siginifica que o método é uma remoção
         else{
+            passer = node;
          //Se o nodo for esquerdo significa que o pai irá receber -1 no fator de balanceamento ou +1 caso direito
-            if(passer.getLeft() == node)
+            if(lado == 1)
                 passer.setFb(passer.getFb()-1);
             else
                 passer.setFb(passer.getFb()+1);
             // A codição de parada no caso da remoção
-            if(passer.getFb() != 0)
-                return;
+           
             //Verificar se após a alteração do fator de balanceamento a subArvore desbalanceou
             if(isUnbalanced(passer))
                 balance(passer);
-            passerChangeFB(passer, 0);
+            
+            if(passer.getFb() != 0)
+                return;
+            
+            passerChangeFB(passer.getParent(), 0, getSide(passer.getParent()) );
             
         }
             
@@ -324,7 +329,16 @@ public class AVLTree  {
         else
             return null;
     }
-
+   
+    private int getSide(NodeAVL node){
+        if(isRoot(node))
+            return 0;
+        if(node.getKey()<= node.getParent().getKey())
+            return 1;
+        else
+            return 2;
+    } 
+     
     
      public NodeAVL insertLeft(NodeAVL no,Object o,int key) throws InvalidPositionException{
          if(hasLeft(no))
@@ -574,20 +588,7 @@ public class AVLTree  {
         Iterator itr = nodesIn.iterator();
         return itr;
     }
-   
-        
-    /*public void printTree(NodeAVL no, String indent, Boolean last){
-        System.out.println(indent + "+- " + no.getElement());
-        indent += last ? "   " : "|  ";
-                
-        Iterator itr = inOrder(no);
-        while(itr.hasNext()){
-            NodeAVL n = (NodeAVL)itr.next();
-            printTree(n, indent, itr.hasNext());
-        }
-    }*/
-    
-    
+
     
   public String toString () {
         Iterator itr = inOrder(root);
