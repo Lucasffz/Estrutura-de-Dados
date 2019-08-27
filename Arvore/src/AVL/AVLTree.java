@@ -268,11 +268,14 @@ public class AVLTree  {
             else
                 passer.setFb(passer.getFb()-1);
             // A codição de parada no caso da inserção
-            if(passer.getFb() == 0)
-                return;
+           
             //Verificar se após a alteração do fator de balanceamento a subArvore desbalanceou
             if(isUnbalanced(passer))
                 balance(passer);
+            
+            if(passer.getFb() == 0)
+                return;
+            
             passerChangeFB(passer, 1);
         }
         //se for diferente de 1 siginifica que o método é uma remoção
@@ -283,11 +286,14 @@ public class AVLTree  {
             else
                 passer.setFb(passer.getFb()+1);
             // A codição de parada no caso da remoção
-            if(passer.getFb() != 0)
-                return;
+           
             //Verificar se após a alteração do fator de balanceamento a subArvore desbalanceou
             if(isUnbalanced(passer))
                 balance(passer);
+            
+            if(passer.getFb() != 0)
+                return;
+            
             passerChangeFB(passer, 0);
             
         }
@@ -557,20 +563,7 @@ public class AVLTree  {
         Iterator itr = nodesIn.iterator();
         return itr;
     }
-   
-        
-    /*public void printTree(NodeAVL no, String indent, Boolean last){
-        System.out.println(indent + "+- " + no.getElement());
-        indent += last ? "   " : "|  ";
-                
-        Iterator itr = inOrder(no);
-        while(itr.hasNext()){
-            NodeAVL n = (NodeAVL)itr.next();
-            printTree(n, indent, itr.hasNext());
-        }
-    }*/
-    
-    
+
     
   public String toString () {
         Iterator itr = inOrder(root);
