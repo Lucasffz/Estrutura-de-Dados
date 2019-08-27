@@ -18,8 +18,8 @@ public class Main {
     	AVLTree arvore = new AVLTree();
     	arvore.insert(10);
         arvore.insert(12);
-        arvore.insert(11);
-
+        arvore.insert(13);
+        
         
          
        

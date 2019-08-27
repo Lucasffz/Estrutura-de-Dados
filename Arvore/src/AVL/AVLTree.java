@@ -46,6 +46,10 @@ public class AVLTree  {
                 passerChangeFB(node, 1);
                 size++;
             }
+          else if(node.getKey() == auxnode.getKey()){
+              System.out.println("Chave já existe");
+              return;
+          }   
           //caso contrario ao lado direito
           else{
               auxnode.setRight(node);
@@ -184,9 +188,11 @@ public class AVLTree  {
       //seta o new parent como pai do nodo
       node.setParent(newParent);
        int Fb_b = node.getFb(),Fb_a = newParent.getFb(), new_FB_B = 0,new_FB_A = 0; 
-       new_FB_B = Fb_b +1 - min(Fb_a, 0);
-       new_FB_A = Fb_a +1 + max(new_FB_B, 0);
+       new_FB_B = Fb_b +1 - Math.min(Fb_a, 0);
+       new_FB_A = Fb_a +1 + Math.max(new_FB_B, 0);
+       System.out.println("Antigo: "+Fb_a +" novo: " + new_FB_A );
        newParent.setFb(new_FB_A);
+       System.out.println("newPArentFB: " + newParent.getFb() );
        node.setFb(new_FB_B);
         
     }
@@ -220,8 +226,13 @@ public class AVLTree  {
         // B + 1 - min(A,0)
         
        int Fb_b = node.getFb(),Fb_a = newParent.getFb(), new_FB_B = 0,new_FB_A = 0; 
-       new_FB_B = Fb_b - 1 - max(Fb_a, 0);
-       new_FB_A = Fb_a -1 + min(new_FB_B, 0);
+       new_FB_B = Fb_b - 1 - Math.max(Fb_a, 0);
+       new_FB_A = Fb_a -1 + Math.min(new_FB_B, 0);
+       System.out.println("Antigo: "+Fb_a +" novo: " + new_FB_A );
+       
+       
+       
+       
        newParent.setFb(new_FB_A);
        node.setFb(new_FB_B);
        
@@ -265,14 +276,20 @@ public class AVLTree  {
             //Se o nodo for esquerdo significa que o pai ira receber +1 no fator de balanceamento ou -1 caso direito
             if(passer.getLeft() == node)
                 passer.setFb(passer.getFb()+1);
-            else
+            else if(passer.getRight() == node)
                 passer.setFb(passer.getFb()-1);
-            // A codição de parada no caso da inserção
-            if(passer.getFb() == 0)
-                return;
+           // A codição de parada no caso da inserção
+            
             //Verificar se após a alteração do fator de balanceamento a subArvore desbalanceou
             if(isUnbalanced(passer))
                 balance(passer);
+            
+            
+            
+            if(passer.getFb() == 0)
+                return;
+            
+            
             passerChangeFB(passer, 1);
         }
         //se for diferente de 1 siginifica que o método é uma remoção
