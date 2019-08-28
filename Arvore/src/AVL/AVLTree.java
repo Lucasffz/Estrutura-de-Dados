@@ -67,7 +67,47 @@ public class AVLTree  {
         
         NodeAVL node = (NodeAVL) search(key, root);
         if(isRoot(node)){
-            throw new InvalidPositionException("Nao e possivel remover a raiz");
+            if(isExternal(node)){
+            node = null;
+            size--;
+            return node.getKey();
+        }
+        //caso tenha um filho esquerdo
+        if(hasLeft(node) && !hasRight(node)){
+            NodeAVL newRoot = node.getLeft();
+            newRoot.setParent(null);
+            newRoot.setFb(node.getFb());
+            node = null;
+            size--;
+            passerChangeFB(newRoot,0,1);
+            return node.getKey();
+        }
+        //caso tenha um filho direito
+        if(!hasLeft(node) && hasRight(node)){
+            NodeAVL newRoot = node.getRight();
+            newRoot.setParent(null);
+            newRoot.setFb(node.getFb());
+            node = null;
+            size--;
+            passerChangeFB(newRoot,0,2);
+            return node.getKey();
+        }
+        //No caso do nó ter dois filhos, precisamos descobrir o substituto
+        if(hasLeft(node) && hasRight(node)){ 
+            NodeAVL passer = node.getRight();
+            while (passer.getLeft() != null){ 
+                passer = passer.getLeft(); 
+            }    
+            int auxKey = passer.getKey();
+            int antkey = node.getKey();
+            Object element = passer.getElement();
+            remover(auxKey);
+            node.setKey(auxKey);
+            node.setElement(element);
+            size--;
+            passerChangeFB(node,0,2);
+            return antkey;
+         }
          }
       
         NodeAVL parent = node.getParent();
@@ -272,8 +312,7 @@ public class AVLTree  {
     //passear arvore e alterar os fatores de balanceamento
     public void passerChangeFB(NodeAVL node, int method, int lado) throws InvalidPositionException{      
         NodeAVL passer;
-        if(isRoot(node))
-            return;
+        
         
           
          // significa que se trata do metodo de insercao
@@ -288,7 +327,7 @@ public class AVLTree  {
             if(isUnbalanced(passer))
                 balance(passer);
              // A codição de parada no caso da inserção
-            if(passer.getFb() == 0)
+            if(passer.getFb() == 0 || passer.getParent() == null)
                 return;
             
             passerChangeFB(passer, 1, 0);
@@ -307,7 +346,7 @@ public class AVLTree  {
             if(isUnbalanced(passer))
                 balance(passer);
             
-            if(passer.getFb() != 0)
+            if(passer.getFb() != 0 || passer.getParent() == null)
                 return;
             
             passerChangeFB(passer.getParent(), 0, getSide(passer.getParent()) );
